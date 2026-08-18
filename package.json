@@ -1,0 +1,19 @@
+{
+    "name": "rojo",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "format": "stylua src && prettier --write .",
+        "format:check": "pnpm lint",
+        "lint": "selene src"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "AGPL-3.0-or-later",
+    "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee",
+    "type": "module",
+    "devDependencies": {
+        "prettier": "^3.9.6"
+    }
+}

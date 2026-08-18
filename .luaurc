@@ -1,0 +1,6 @@
+{
+    "languageMode": "strict",
+    "lint": {
+        "LocalUnused": false
+    }
+}

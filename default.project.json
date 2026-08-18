@@ -1,0 +1,32 @@
+{
+    "name": "Spawnpad",
+    "tree": {
+        "$className": "DataModel",
+
+        "ReplicatedStorage": {
+            "Spawnpad": {
+                "$path": "src/Spawnpad.Shared"
+            }
+        },
+
+        "ServerScriptService": {
+            "Spawnpad": {
+                "$path": "src/Spawnpad.Server"
+            }
+        },
+
+        "StarterPlayer": {
+            "StarterPlayerScripts": {
+                "Spawnpad": {
+                    "$path": "src/Spawnpad.Client"
+                }
+            }
+        },
+
+        "ReplicatedFirst": {
+            "Spawnpad": {
+                "$path": "src/Spawnpad.ReplicatedFirst"
+            }
+        }
+    }
+}
