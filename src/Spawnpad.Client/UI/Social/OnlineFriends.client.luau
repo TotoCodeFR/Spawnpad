@@ -1,7 +1,14 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local gui = player:WaitForChild("PlayerGui"):WaitForChild("Main"):WaitForChild("Main"):WaitForChild("Frame"):WaitForChild("Social"):WaitForChild("Grid"):WaitForChild("NowPlaying")
+local gui = player
+	:WaitForChild("PlayerGui")
+	:WaitForChild("Main")
+	:WaitForChild("Main")
+	:WaitForChild("Frame")
+	:WaitForChild("Social")
+	:WaitForChild("Grid")
+	:WaitForChild("NowPlaying")
 local playerTemplate = ReplicatedStorage:WaitForChild("Templates"):WaitForChild("Social"):WaitForChild("Player")
 
 local LocationType = {
@@ -36,11 +43,16 @@ local function listFriends()
 		frame.Parent = gui:WaitForChild("PlayerList")
 		frame.Visible = true
 		frame.Name = friend.UserName
-		frame.Icon.Image = Players:GetUserThumbnailAsync(friend.VisitorId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+		frame.Icon.Image =
+			Players:GetUserThumbnailAsync(friend.VisitorId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
 		frame.DisplayName.Text = friend.DisplayName
 		if friend.LocationType == LocationType.InGame or friend.LocationType == LocationType.MobileInGame then
 			frame.GameName.Text = friend.LastLocation or "In a game"
-		elseif friend.LocationType == LocationType.Website or friend.LocationType == LocationType.MobileWebsite or friend.LocationType == LocationType.XBoxApp then
+		elseif
+			friend.LocationType == LocationType.Website
+			or friend.LocationType == LocationType.MobileWebsite
+			or friend.LocationType == LocationType.XBoxApp
+		then
 			frame.GameName.Text = "Online"
 		elseif friend.LocationType == LocationType.Studio or friend.LocationType == LocationType.TeamCreate then
 			frame.GameName.Text = "In Studio"

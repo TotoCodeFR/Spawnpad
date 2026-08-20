@@ -52,12 +52,11 @@ function Notifications.show(self: Notification)
 		{ Position = UDim2.fromOffset(0, height), GroupTransparency = 0 }
 	)
 	tween:Play()
-	local tween2 = game:GetService("TweenService")
-		:Create(
-			self.notification:WaitForChild("Flash"),
-			TweenInfo.new(0.15, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out),
-			{ BackgroundTransparency = 1 }
-		)
+	local tween2 = game:GetService("TweenService"):Create(
+		self.notification:WaitForChild("Flash"),
+		TweenInfo.new(0.15, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out),
+		{ BackgroundTransparency = 1 }
+	)
 	tween2:Play()
 end
 
