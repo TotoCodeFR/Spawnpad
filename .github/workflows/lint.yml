@@ -1,24 +1,24 @@
 name: Lint
 
 on:
-  push:
-  pull_request:
+    push:
+    pull_request:
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
 
-      - uses: CompeyDev/setup-rokit@v0.2.1
+            - uses: CompeyDev/setup-rokit@v0.2.1
 
-      - name: Install project tools
-        run: rokit install
+            - name: Install project tools
+              run: rokit install --no-trust-check
 
-      - name: Style check (stylua)
-        if: always()
-        run: stylua --check .
+            - name: Style check (stylua)
+              if: always()
+              run: stylua --check .
 
-      - name: Lint (selene)
-        if: always()
-        run: selene .
+            - name: Lint (selene)
+              if: always()
+              run: selene .
