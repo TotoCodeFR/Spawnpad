@@ -23,4 +23,6 @@ This is just the API, so you can't see much yet. If you're a developer, you can 
     );
 });
 
-app.listen({ port: 3000 });
+app.listen({ port: Number(process.env.PORT) || 3000 }, () => {
+    console.log(`Listening on port ${process.env.PORT || 3000}`);
+});
