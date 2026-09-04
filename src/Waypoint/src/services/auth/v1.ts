@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 import { randomBytes, createHash } from "node:crypto";
 import { ulid } from "ulid";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gt, lte } from "drizzle-orm";
 import { db } from "../../external/db.js";
 import { sessions } from "../../external/schema.js";
 
@@ -55,10 +55,20 @@ export const authPlugin: FastifyPluginAsync = async (fastify, opts) => {
                 and(
                     eq(sessions.hashedToken, hashedToken),
                     eq(sessions.userId, userId),
+                    gt(sessions.expiresAt, new Date()),
                 ),
             );
 
         if (session.length === 0) {
+            await db
+                .delete(sessions)
+                .where(
+                    and(
+                        eq(sessions.hashedToken, hashedToken),
+                        lte(sessions.expiresAt, new Date()),
+                    ),
+                );
+
             return res.status(404).send({ error: "session not found" });
         }
 

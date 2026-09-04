@@ -3,7 +3,7 @@ import type { WebSocket } from "@fastify/websocket";
 declare module "@fastify/websocket" {
     interface WebSocket {
         state: {
-            userId: number;
+            userId: string;
             id: string;
         };
     }
