@@ -8,23 +8,17 @@ import { db } from "../../external/db.js";
 import { sessions } from "../../external/schema.js";
 import { and, eq, gt, lte } from "drizzle-orm";
 import { createHash } from "node:crypto";
-import type { WebSocket } from "@fastify/websocket";
+import {
+    addSessionSocket,
+    closeSessionSockets,
+} from "./session-sockets.js";
 
 type WebsocketResponse = {
     type: string;
     data: any;
 };
 
-const socketsBySessionId = new Map<string, Set<WebSocket>>();
 const expirationTimers = new Map<string, NodeJS.Timeout>();
-
-function closeSessionSockets(sessionId: string) {
-    const sockets = socketsBySessionId.get(sessionId);
-
-    for (const socket of sockets ?? []) {
-        socket.close(1008, "Token expired");
-    }
-}
 
 async function deleteExpiredSession(sessionId: string) {
     const timer = expirationTimers.get(sessionId);
@@ -42,7 +36,7 @@ async function deleteExpiredSession(sessionId: string) {
                 ),
             );
     } finally {
-        closeSessionSockets(sessionId);
+        closeSessionSockets(sessionId, "Token expired");
         expirationTimers.delete(sessionId);
     }
 }
@@ -155,9 +149,7 @@ export const wsV1: FastifyPluginAsync = async (fastify, opts) => {
         const { userId, id } = session;
 
         socket.state = { userId, id };
-        const sockets = socketsBySessionId.get(id) ?? new Set<WebSocket>();
-        sockets.add(socket);
-        socketsBySessionId.set(id, sockets);
+        const removeSocket = addSessionSocket(id, socket);
         scheduleSessionExpiration(id, session.expiresAt, (error) => {
             fastify.log.error(error, "Failed to expire session");
         });
@@ -175,10 +167,7 @@ export const wsV1: FastifyPluginAsync = async (fastify, opts) => {
         });
 
         socket.on("close", () => {
-            sockets.delete(socket);
-            if (sockets.size === 0) {
-                socketsBySessionId.delete(id);
-            }
+            removeSocket();
             console.log("socket closed");
         });
     });
