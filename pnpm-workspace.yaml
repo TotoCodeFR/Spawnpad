@@ -1,0 +1,4 @@
+packages:
+  - "src/Waypoint"
+allowBuilds:
+  esbuild: true
