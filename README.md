@@ -5,7 +5,7 @@ A Roblox game that acts as a launcher, alongside features such as music, party, 
 ## Requirements
 
 This project uses [rokit](https://github.com/rojo-rbx/rokit) to manage the Roblox development tools, [pnpm](https://pnpm.io/) to manage Node.js dependencies and scripts and [corepack](https://nodejs.org/api/corepack.html) to manage the pnpm installation.
-You will need to have rokit and Node.js installed and added to your PATH alongside the `corepack` CLI installed globally to npm.
+You will need to have rokit and Node.js installed and added to your PATH (`corepack` isn't required but recommended).
 
 ## Installation
 
@@ -18,6 +18,14 @@ cd Spawnpad
 corepack enable
 pnpm install
 rokit install
+
+# Copy the .env.example file to .env
+cp .env.example .env
+
+# Edit the .env file to set your environment variables
+
+# Push the database schema
+pnpm db:push
 
 # To serve the game through Rojo
 rojo serve
