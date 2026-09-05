@@ -8,10 +8,7 @@ import { db } from "../../external/db.js";
 import { sessions } from "../../external/schema.js";
 import { and, eq, gt, lte } from "drizzle-orm";
 import { createHash } from "node:crypto";
-import {
-    addSessionSocket,
-    closeSessionSockets,
-} from "./session-sockets.js";
+import { addSessionSocket, closeSessionSockets } from "./session-sockets.js";
 
 type WebsocketResponse = {
     type: string;
@@ -172,3 +169,17 @@ export const wsV1: FastifyPluginAsync = async (fastify, opts) => {
         });
     });
 };
+
+async function onServerShutdown() {
+    const sessions = await db.query.sessions.findMany();
+    console.log("Closing", sessions.length, "sessions...");
+    for (const session of sessions) {
+        await closeSessionSockets(
+            session.id,
+            "Server is undergoing maintenance, please stand by...",
+        );
+    }
+}
+
+process.on("SIGTERM", onServerShutdown);
+process.on("SIGINT", onServerShutdown);
