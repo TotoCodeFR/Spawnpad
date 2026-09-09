@@ -1,5 +1,5 @@
 function whoami(data)
-    print(data.userId)
+	print(data)
 end
 
 return whoami

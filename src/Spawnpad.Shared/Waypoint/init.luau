@@ -3,16 +3,17 @@ local DataTypeLoader = require("./Waypoint/DataTypeLoader")
 local Waypoint = {}
 Waypoint.__index = Waypoint
 
-local SPAWNPAD_WAYPOINT_URL_EXISTS, SPAWNPAD_WAYPOINT_URL = pcall(function(...)
+local SPAWNPAD_WAYPOINT_URL_EXISTS, SPAWNPAD_WAYPOINT_URL = pcall(function()
 	return HttpService:GetSecret("SPAWNPAD_WAYPOINT_URL")
 end)
-local SPAWNPAD_WAYPOINT_INSECURE_EXISTS, SPAWNPAD_WAYPOINT_INSECURE = pcall(function(...)
+local SPAWNPAD_WAYPOINT_INSECURE_EXISTS = pcall(function()
 	return HttpService:GetSecret("SPAWNPAD_WAYPOINT_INSECURE")
 end)
 
 Waypoint.BASE_URL = ((SPAWNPAD_WAYPOINT_URL_EXISTS and SPAWNPAD_WAYPOINT_URL) or "localhost:3000")
-Waypoint.API_URL = ((SPAWNPAD_WAYPOINT_INSECURE_EXISTS) and "http://" or "https://" ) .. Waypoint.BASE_URL
-Waypoint.WS_URL = ((SPAWNPAD_WAYPOINT_INSECURE_EXISTS) and "ws://" or "wss://") .. Waypoint.BASE_URL
+Waypoint.API_URL = (SPAWNPAD_WAYPOINT_INSECURE_EXISTS and "http://" or "https://") .. Waypoint.BASE_URL
+
+Waypoint.WS_URL = (SPAWNPAD_WAYPOINT_INSECURE_EXISTS and "ws://" or "wss://") .. Waypoint.BASE_URL
 
 DataTypeLoader:LoadDataTypes()
 
@@ -51,28 +52,37 @@ function Waypoint.new(userId: number)
 		},
 	})
 
+	self.ws.Opened:Connect(function()
+		-- wait 3 seconds before sending whoami because of server-side checks
+		task.wait(3)
+		local success = pcall(function()
+			return self.ws:Send(HttpService:JSONEncode({
+				type = "whoami",
+			}))
+		end)
+
+		print(success)
+	end)
+
 	self.ws.Error:Connect(function(code: number, message: string)
 		self.wsError = true
-		error("WS Error: " .. tostring(code) .. ": " .. message)
+		warn("WS Error: " .. tostring(code) .. ": " .. message)
 	end)
 
 	self.ws.Closed:Connect(function()
-	    if self.wsError then
+		if self.wsError then
 			return
 		end
-		error("WS Connection closed.")
+		warn("WS Connection closed.")
 	end)
 
 	self.ws.MessageReceived:Connect(function(message: string)
+		print(message)
 		local dataTable = HttpService:JSONDecode(message)
 		local data, type = dataTable.data, dataTable.type
 
 		DataTypeLoader:CallDataType(type, data)
 	end)
-
-	self.ws:Send(HttpService:JSONEncode({
-		type = "whoami",
-	}))
 
 	return self
 end
