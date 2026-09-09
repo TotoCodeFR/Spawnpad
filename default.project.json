@@ -21,12 +21,6 @@
                     "$path": "src/Spawnpad.Client"
                 }
             }
-        },
-
-        "ReplicatedFirst": {
-            "Spawnpad": {
-                "$path": "src/Spawnpad.ReplicatedFirst"
-            }
         }
     }
 }

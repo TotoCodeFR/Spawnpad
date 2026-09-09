@@ -6,7 +6,14 @@
     "scripts": {
         "format": "stylua src && prettier --write .",
         "format:check": "pnpm lint",
-        "lint": "selene src"
+        "lint": "selene src",
+        "dev": "concurrently \"pnpm -F waypoint dev\" \"rojo serve\"",
+        "build": "rojo build && pnpm -F waypoint build",
+        "start": "pnpm -F waypoint start",
+        "db:generate": "pnpm -F waypoint db:generate",
+        "db:migrate": "pnpm -F waypoint db:migrate",
+        "db:push": "pnpm -F waypoint db:push",
+        "db:studio": "pnpm -F waypoint db:studio"
     },
     "keywords": [],
     "author": "",
@@ -14,6 +21,7 @@
     "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee",
     "type": "module",
     "devDependencies": {
+        "concurrently": "^10.0.5",
         "prettier": "^3.9.6"
     }
 }
