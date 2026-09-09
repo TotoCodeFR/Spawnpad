@@ -6,7 +6,7 @@ local gamesGui = playerGui:WaitForChild("Games"):WaitForChild("Main")
 -- local viewportFrame = script.Parent.ViewportFrame:WaitForChild("ViewportFrame")
 -- local model = viewportFrame:WaitForChild("controller")
 
-script.Parent.MouseButton1Click:Connect(function()
+mainGui:WaitForChild("Frame"):WaitForChild("Apps"):WaitForChild("Games").MouseButton1Click:Connect(function()
 	gamesGui.Visible = true
 	mainGui.Visible = false
 end)
