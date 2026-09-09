@@ -1,4 +1,4 @@
 packages:
-  - "src/Waypoint"
+    - "src/Waypoint"
 allowBuilds:
-  esbuild: true
+    esbuild: true
