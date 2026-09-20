@@ -3,8 +3,9 @@ local Orbit = {}
 export type OrbitButton = "TextButton" | "ImageButton"
 export type OrbitLabel = "TextLabel" | "ImageLabel"
 export type OrbitInput = "TextBox"
+export type OrbitContainer = "Frame" | "ScrollingFrame" | "ViewportFrame"
 
-export type OrbitInstances = OrbitButton | OrbitLabel | OrbitInput
+export type OrbitInstances = OrbitButton | OrbitLabel | OrbitInput | OrbitContainer
 
 type OrbitObject = {
 	_instance: Instance,
@@ -28,11 +29,7 @@ function OrbitMetatable.__index(self: OrbitObject, key: string): any
 	return (self._instance :: any)[key]
 end
 
-function OrbitMetatable.__newindex(
-	self: OrbitObject,
-	key: string,
-	value: any
-)
+function OrbitMetatable.__newindex(self: OrbitObject, key: string, value: any)
 	local instance = self._instance :: any
 
 	local success = pcall(function()
@@ -46,10 +43,7 @@ function OrbitMetatable.__newindex(
 	self._props[key] = value
 end
 
-function Orbit.new(
-	className: OrbitInstances,
-	props: { [string]: any }
-): OrbitObject
+function Orbit.new(className: OrbitInstances, props: { [string]: any }): OrbitObject
 	local instance = Instance.new(className)
 
 	local self = {
