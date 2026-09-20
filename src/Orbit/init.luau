@@ -63,8 +63,15 @@ function Orbit.new(className: OrbitInstances, props: { [string]: any }): OrbitOb
 end
 
 function Orbit.template(self: OrbitObject, props: { [string]: any })
+	local instance = self._instance
+	assert(instance, "No instance to template from, call Orbit.new first")
+
+	local cloned = instance:Clone()
+	self._instance = cloned
+
+	local object = self :: any
 	for key, value in props do
-		self[key] = value
+		object[key] = value
 	end
 end
 
